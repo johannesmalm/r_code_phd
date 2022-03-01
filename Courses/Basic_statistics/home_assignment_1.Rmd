@@ -1,0 +1,99 @@
+---
+output:
+  pdf_document: default
+  html_document: default
+---
+# Home assignment 1
+
+## Load libraries
+```{r message=FALSE}
+library(tidyverse)
+library(ggpubr)
+```
+
+
+# 1.1 "Hand" Calculations
+```{r message=FALSE}
+obs <- sort(c(3.9, 5.3, 6.1, 4.9, 9.1, 2.8, 3.5, 3.2, 2.6, 5.9))
+n = 10
+
+mean_obs <- (3.9+5.3+6.1+4.9+9.1+2.8+3.5+3.2+2.6+5.9)/n
+
+var_calc <- tibble(obs = obs) %>% 
+  mutate(mean = mean_obs) %>% 
+  mutate(xi_x2 = (obs - mean)^2) %>% 
+  mutate(sum_xi_x2 = sum(xi_x2)) %>% 
+  mutate(var = sum_xi_x2/(n-1))
+
+var_calc
+
+median_position <- 50*(n+1)/100 # 5.5
+median_interpolation <- (obs[5] + 0.5)*(obs[6] - obs[5])
+
+print(paste0('a) mean: ', mean_obs, ', variance: ', round(var_calc$var[1],2)))
+print(paste0('b) median: ', median_interpolation))
+```
+
+# 1.2 Computer Exercise
+## a) Import dataset
+```{r message=FALSE}
+cordblood <- read_delim("Data/cordblood.txt", locale = locale(encoding = "latin1"))
+head(cordblood)
+```
+
+## b) Graphs and computations
+## 1 Histograms and boxplots
+
+```{r message=FALSE}
+create_hist <- function(data, name) {
+  return(
+    ggplot(cordblood, aes(data)) +
+      geom_histogram() +
+      labs(x = name, y = '')
+  )
+}
+
+create_bp <- function(data, name) {
+  return(
+    ggplot(cordblood, aes(x = '', data)) +
+      geom_boxplot() +
+      labs(x = name, y = '')
+  )
+}
+
+var_names <- c('Measles', 'Parotitis', 'Rubella', 'Chickenpox')
+ggarrange(create_hist(cordblood$Measles, var_names[1]),
+          create_hist(cordblood$Parotitis, var_names[2]),
+          create_hist(cordblood$Rubella, var_names[3]),
+          create_hist(cordblood$Chickenpox, var_names[4]),
+          create_bp(cordblood$Measles, var_names[1]),
+          create_bp(cordblood$Parotitis, var_names[2]),
+          create_bp(cordblood$Rubella, var_names[3]),
+          create_bp(cordblood$Chickenpox, var_names[4]),
+          ncol = 4, nrow = 2)
+```
+
+## 2 Mean, median, variance, interquartile
+### Comment: 
+
+```{r}
+
+calc_values <- function(data, name) {
+  df <- tibble(name = name, 
+               mean = mean(data),
+               median = median(data),
+               variance = var(data),
+               iqr = IQR(data)
+               )
+  return(df)
+}
+
+res_measles <- calc_values(cordblood$Measles, "Measles")
+res_parotitis <- calc_values(cordblood$Parotitis, "Parotitis")
+res_rubella <- calc_values(cordblood$Rubella, "Rubella")
+res_chickenpox <- calc_values(cordblood$Chickenpox, "Chickenpox")
+
+bind_rows(res_measles, res_parotitis, res_rubella, res_chickenpox)
+```
+
+

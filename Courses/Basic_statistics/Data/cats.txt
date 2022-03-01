@@ -1,0 +1,58 @@
+Name	Breed	Sex	Neutered	Age	Weight
+Messi	Domestic short-haired	male	yes	1	5.2
+Forlan	Domestic short-haired	male	yes	1	5.3
+Galadriel	Domestic short-haired	female	yes	3	3.3
+Gandalf	Domestic short-haired	male	yes	3	3.3
+Idun	Domestic short-haired	female	no	6	5.5
+Polly	Domestic short-haired	female	yes	7	3.2
+Sally	Domestic short-haired	female	no	7	2.6
+Theodora	Domestic short-haired	female	no	2	3.8
+Illidan	Norwegian forest	male	yes	5	3.9
+Tiggo	Domestic short-haired	male	yes	4	5.6
+Wilma	Domestic short-haired	female	yes	5	4.3
+Brorsan	Domestic short-haired	male	yes	2	4.8
+Syrran	Domestic short-haired	female	yes	2	4.2
+Lizzy	Domestic short-haired	female	no	3	3.2
+Darcy	Domestic short-haired	male	yes	2	5.2
+Bons	Domestic short-haired	male	yes	2	3.9
+Smokey	Domestic short-haired	female	no	6	4.5
+Hubert af Bro	Domestic short-haired	male	yes	2	5.4
+Mirre	Domestic short-haired	female	no	8	5
+Ester	Birman	female	yes	3	3
+Astrid	Birman	female	yes	2	2.8
+Kola	Domestic short-haired	male	yes	8	5.3
+Russel Cat	Domestic short-haired	male	yes	10	5
+Mickel	Somali	male	yes	4	3.9
+Kimmie	Somali	female	no	5	2.9
+Gaia	Somali	female	no	9	3
+Izabelle	Somali	female	no	7	3
+Leopardkatten	Domestic short-haired	male	yes	3	4.9
+Sonny	Domestic short-haired	male	yes	3	5.2
+Anton	Domestic short-haired	male	yes	2	5.9
+Vera	Domestic short-haired	female	no	2	3.9
+Hubert	Domestic short-haired	male	yes	3	5.7
+Ask	Somali	male	yes	7	5.5
+Mouse	Domestic short-haired	male	yes	8	5.2
+Jasmin	Domestic short-haired	female	yes	7	5
+Mufasa	Domestic short-haired	male	yes	6	6.8
+Majsan	Domestic short-haired	female	yes	4	3.2
+Terror	Domestic short-haired	male	yes	7	7.6
+Teddy Piper	Domestic short-haired	male	yes	7	5.9
+Maggie	Domestic short-haired	female	yes	7	3.4
+Maja	Domestic short-haired	female	no	2	4.4
+Jerry	Domestic short-haired	male	yes	5	6.1
+Koda	Domestic short-haired	male	yes	3	4.5
+Miss Caddy	Domestic short-haired	female	yes	8	3.6
+Lillan	Domestic short-haired	female	no	5	1.5
+Lillbeth	Domestic short-haired	female	no	2	1.9
+Sylvester	Domestic short-haired	male	yes	10	6.3
+Mattis	Ragdoll	male	yes	2	5.6
+Caprice	Ragdoll	female	yes	2	4.2
+Diva	Norwegian forest	female	yes	10	5.5
+Stripe	Domestic short-haired	male	yes	8	5.2
+Qira	Norwegian forest	female	no	12	3.3
+Lancelot	Burmese	male	yes	7	5.1
+Tesla	Burmese	female	no	6	3.2
+Zorro	Burmese	male	yes	6	5.1
+Pelle	Domestic short-haired	male	yes	3	5
+Alfons	Domestic short-haired	male	yes	7	6
