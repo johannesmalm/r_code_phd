@@ -3,7 +3,8 @@ output:
   pdf_document: default
   html_document: default
 ---
-# Home assignment 1
+# Basic Statistics: Home assignment 1
+## Johannes Malm, 8111045996
 
 ## Load libraries
 ```{r message=FALSE}
@@ -25,7 +26,7 @@ var_calc <- tibble(obs = obs) %>%
   mutate(sum_xi_x2 = sum(xi_x2)) %>% 
   mutate(var = sum_xi_x2/(n-1))
 
-var_calc
+knitr::kable(var_calc)
 
 median_position <- 50*(n+1)/100 # 5.5
 median_interpolation <- (obs[5] + 0.5)*(obs[6] - obs[5])
@@ -34,22 +35,27 @@ print(paste0('a) mean: ', mean_obs, ', variance: ', round(var_calc$var[1],2)))
 print(paste0('b) median: ', median_interpolation))
 ```
 
+\newpage
 # 1.2 Computer Exercise
 ## a) Import dataset
+
 ```{r message=FALSE}
 cordblood <- read_delim("Data/cordblood.txt", locale = locale(encoding = "latin1"))
-head(cordblood)
+knitr::kable(head(cordblood, 25))
 ```
 
+\newpage
 ## b) Graphs and computations
 ## 1 Histograms and boxplots
 
-```{r message=FALSE}
+```{r message=FALSE, warning=FALSE}
 create_hist <- function(data, name) {
   return(
     ggplot(cordblood, aes(data)) +
       geom_histogram() +
-      labs(x = name, y = '')
+      labs(x = name, y = '') +
+      xlim(0,15000) +
+      ylim(0, 90)
   )
 }
 
@@ -57,7 +63,8 @@ create_bp <- function(data, name) {
   return(
     ggplot(cordblood, aes(x = '', data)) +
       geom_boxplot() +
-      labs(x = name, y = '')
+      labs(x = name, y = '') +
+      ylim(0, 15000)
   )
 }
 
@@ -73,10 +80,12 @@ ggarrange(create_hist(cordblood$Measles, var_names[1]),
           ncol = 4, nrow = 2)
 ```
 
-## 2 Mean, median, variance, interquartile
-### Comment: 
+### Comment: In lack of knowledge when it comes to level of antibodies in the cord blood; I made the assumpation that a certain level of antibodies is equally good/bad across all diseases in the dataset. With that assumption I set the limits on the X- and Y-axis to fixed limits accross the graphs for better comparison. The historgrams show that Measles and Parotitis distribution of level of antibodies are clearly skewed to the left and also indicates a larger variance than the other two. Rubella shows low levels of antibodies compared to the other three. When it comes to chickenpox the histogram shows a distribution which is more narrow than Measles and Parotitis which could be interpreted that the spread is lower.
 
-```{r}
+\newpage
+## 2 Mean, median, variance, interquartile
+
+```{r, message=F, warning=F}
 
 calc_values <- function(data, name) {
   df <- tibble(name = name, 
@@ -93,7 +102,104 @@ res_parotitis <- calc_values(cordblood$Parotitis, "Parotitis")
 res_rubella <- calc_values(cordblood$Rubella, "Rubella")
 res_chickenpox <- calc_values(cordblood$Chickenpox, "Chickenpox")
 
-bind_rows(res_measles, res_parotitis, res_rubella, res_chickenpox)
+bind_res <- bind_rows(res_measles, res_parotitis, res_rubella, res_chickenpox)
+bind_res$mean <- round(bind_res$mean, 1)
+bind_res$median <- round(bind_res$median, 1)
+bind_res$variance <- round(bind_res$variance, 1)
+bind_res$iqr <- round(bind_res$iqr, 1)
+
+knitr::kable(bind_res)
 ```
 
+### Comment: It depends on what you are after. To me its more meaningful to use the median and IQR. In the graphs we observed a skewness in the distributions for Measles, Parotitis and Chickenpox. With skewness we know that median is not the same as mean. The mean could be influenced by outliers which the median is not that sensitive to in a dataset of this size. The skewness and outliers also pushes up the variance but by using IQR we might get more meaningful picture of the spread.
 
+\newpage
+## 3 Mean, median, variance, interquartile grouped by sex
+
+
+```{r message=F, warning=F}
+create_by_sex <- function(data, name) {
+  return(ggplot(cordblood, aes(x=Sex, y=data, color=Sex)) +
+           geom_boxplot() +
+           labs(x="", y="", title = name) +
+           theme(legend.position="none") +
+           ylim(0,15000)
+  )
+}
+
+plot <- ggarrange(create_by_sex(cordblood$Measles, var_names[1]), 
+          create_by_sex(cordblood$Parotitis, var_names[2]), 
+          create_by_sex(cordblood$Rubella, var_names[3]), 
+          create_by_sex(cordblood$Chickenpox, var_names[4]), 
+          nrow = 2, ncol = 2, common.legend = TRUE, legend = "top")
+
+annotate_figure(plot, top = text_grob("Level of antibodies by sex", 
+               color = "black", face = "bold", size = 14))
+
+calc_by_sex <- cordblood %>% 
+  select(Sex:Chickenpox) %>% 
+  group_by(Sex) %>% 
+  summarise(Me_md = median(Measles), 
+            Me_iqr = IQR(Measles), 
+            Pa_md = median(Parotitis),
+            Pa_iqr = IQR(Parotitis),
+            Ru_md = median(Rubella),
+            Ru_iqr = IQR(Rubella),
+            Ch_md = median(Chickenpox),
+            Ch_iqr = IQR(Chickenpox),
+            
+            )
+    knitr::kable(calc_by_sex)
+  
+```
+
+### Comment: When looking at median the level of antibodies differ the most between male and female when it comes to parotites and chickenbox. With no assumption that a certain level is equally good/bad across all diseases it could have been intresting to take The Coefficient of Variation into consideration when comparing the level of antibodies.
+
+\newpage
+## 4 Scatterplot of Measles against Chickenpox 
+
+```{r, message=F, warning=F}
+corr_value <- cor(cordblood$Measles, cordblood$Chickenpox)
+corr_value
+ggplot(cordblood, aes(x = Chickenpox, y = Measles)) +
+  geom_point() +
+  labs(title = paste0("Level of antibodies of Measles against Chickenpox (R-squared: ", round(corr_value, 2), ")")) +
+  geom_smooth(method = "lm", se=FALSE)
+
+
+```
+
+### Comment: The R-squared value of 0.21 indicates low level of correlation between Measles and Chickenpox. The trend line is positive which indicates higher levels of antibodies of Measles  are associated with higher levels of antibodies of Chickenpox.
+
+\newpage
+## 5 Scatterplot of Measles, Age and Sex
+
+```{r, message=F, warning=F}
+corr_measles_age <- cordblood %>% 
+  group_by(Sex) %>% 
+  summarise(corr_measles = cor(Measles, Age))
+
+knitr::kable(corr_measles_age)
+
+ggplot(cordblood, aes(x = Age, y = Measles, color = Sex)) +
+  geom_point() +
+  labs(y = "Level of antibodies", title = "Level of antibodies against Measles against Age by Sex", subtitle = paste0("R-squared Female: ", round(corr_measles_age$corr_measles[1], 2), " | Male: ", format(round(corr_measles_age$corr_measles[2], 2), nsmall = 2))) +
+  geom_smooth(method = "lm", se=FALSE)
+```
+
+### Comment: The rendlines implies when the age of the mother increases the level of antibodies against Measles increases across both sexes. The trendlines indicates small differences in level of antibodies againts Measles between the sexes. Trendline fit female: 0.37, male: 0.40.
+
+\newpage
+## 6 Boxplots of Chickenpox by hospital
+
+```{r, warning=F, message=F}
+Sys.setlocale("LC_ALL","sv_SE.UTF-8")
+
+ggplot(cordblood, aes(x=Hospital, y=Chickenpox, color=Hospital)) +
+  geom_boxplot() +
+  theme(legend.position="none") +
+  labs(title = "Level of antibodies against Chickenpox by hospital", y = "Level of antibodies")
+  
+```
+
+### Comment: From the scatter plot we can see that none of the medians is outside any of the other boxes which implies there are not significant differences of level of antibodies against Chickenpox between hospital observations. Note the two outliers in Lidköping and a fairly large max whisker in Sundsvall.

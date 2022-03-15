@@ -1,0 +1,11 @@
+---
+title: "home_assignment_2"
+author: "Johannes Malm"
+date: "3/2/2022"
+output: pdf_document
+---
+
+```{r}
+print("kk")
+```
+
